@@ -11,15 +11,15 @@ from pychromecast.error import RequestFailed
 import edge_tts
 
 # ====== CONFIG ======
-CAST_NAME = "Speaker Camera"          # <- EXACT name from discovery
-TEXT = "Intrusione rilevata! Il sistema di autodistruzione è stato attivato. I presenti sono pregati di evacuare l'area immediatamente."  # Text to say
+CAST_NAME = "Speaker Cucina"          # <- EXACT name from discovery
+TEXT = "Ciao."  # Text to say
 VOICE = "it-IT-DiegoNeural"          # try: it-IT-ElsaNeural, it-IT-IsabellaNeural, it-IT-DiegoNeural
 RATE = "+5%"                         # e.g. "-10%", "+15%"
-PITCH = "-33Hz"                       # e.g. "+20Hz", "-10Hz"
+PITCH = "-66Hz"                       # e.g. "+20Hz", "-10Hz"
 VOLUME = "+0%"                       # e.g. "+10%", "-10%"
 
 PORT = 8765
-CAST_VOLUME = 0.2                    # 0.0 - 1.0
+CAST_VOLUME = 0.7                    # 0.0 - 1.0
 MAX_WAIT_SECONDS = 20
 # ====================
 
