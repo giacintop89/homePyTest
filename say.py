@@ -12,7 +12,7 @@ import edge_tts
 
 # ====== CONFIG ======
 CAST_NAME = "Speaker Cucina"          # <- EXACT name from discovery
-TEXT = "Ciao."  # Text to say
+TEXT = "Ciao. Viva la mortadella sannita."  # Text to say
 VOICE = "it-IT-DiegoNeural"          # try: it-IT-ElsaNeural, it-IT-IsabellaNeural, it-IT-DiegoNeural
 RATE = "+5%"                         # e.g. "-10%", "+15%"
 PITCH = "-66Hz"                       # e.g. "+20Hz", "-10Hz"
