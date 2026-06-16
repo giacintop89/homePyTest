@@ -1,1 +1,3 @@
 tts_out/say.mp3
+.venv/
+.DS_Store

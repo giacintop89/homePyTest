@@ -11,8 +11,8 @@ from pychromecast.error import RequestFailed
 import edge_tts
 
 # ====== CONFIG ======
-CAST_NAME = "Speaker Cucina"          # <- EXACT name from discovery
-TEXT = "Ciao. Viva la mortadella sannita."  # Text to say
+CAST_NAME = "Camera"          # <- EXACT name from discovery
+TEXT = "Ciao."  # Text to say
 VOICE = "it-IT-DiegoNeural"          # try: it-IT-ElsaNeural, it-IT-IsabellaNeural, it-IT-DiegoNeural
 RATE = "+5%"                         # e.g. "-10%", "+15%"
 PITCH = "-66Hz"                       # e.g. "+20Hz", "-10Hz"
@@ -36,10 +36,12 @@ class LoggingHandler(SimpleHTTPRequestHandler):
         super().do_GET()
 
 
-def get_local_ip() -> str:
+def get_local_ip(target: str = "8.8.8.8") -> str:
+    # Route toward `target` so we pick the interface on the same network as
+    # the Cast device (avoids advertising a VPN/tunnel IP it can't reach).
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.connect(("8.8.8.8", 80))
+        s.connect((target, 80))
         return s.getsockname()[0]
     finally:
         s.close()
@@ -81,10 +83,8 @@ def main() -> None:
 
     print("MP3 path:", mp3_path)
 
-    # 2) Serve MP3
+    # 2) Serve MP3 (binds all interfaces; URL is built once we know the cast IP)
     httpd = serve_folder(out_dir, PORT)
-    media_url = f"http://{get_local_ip()}:{PORT}/{mp3_path.name}"
-    print("Serving:", media_url)
 
     # 3) Discover Cast devices (keep discovery running while connecting/starting)
     chromecasts, browser = pychromecast.get_chromecasts()
@@ -97,6 +97,11 @@ def main() -> None:
         cast = next((c for c in chromecasts if friendly_name(c) == CAST_NAME), None)
         if not cast:
             raise RuntimeError(f'Cast device "{CAST_NAME}" not found.')
+
+        # Advertise the IP on the same network as the cast device.
+        cast_host = cast.cast_info.host
+        media_url = f"http://{get_local_ip(cast_host)}:{PORT}/{mp3_path.name}"
+        print("Serving:", media_url)
 
         cast.wait(timeout=15)
         cast.set_volume(CAST_VOLUME)
